@@ -1,4 +1,23 @@
-import React, {useState,useEffect,useMemo} from "react";
+import React, {useState, useEffect, useMemo} from 'react';
+
+function Ago ({date}) {
+  const then = new Date(date);
+  const now = new Date();
+  const seconds = Math.round((now - then) / 1000);
+  const minutes = Math.round(seconds / 60);
+
+  return <small style={{
+      fontSize: '.8rem',
+      color: '#BDC3C7'
+    }}>
+    {seconds < 5 ? 
+    'just now' 
+    : seconds < 60 ? 
+    seconds + 'seconds ago' 
+    : seconds < 90 ? 'about a minute ago'
+    : minutes < 60 ? minutes + ' minutes ago' : ''}
+  </small>;
+};
 
 export default function App() {
   const [todos, setTodos] = useState([]);
@@ -19,6 +38,7 @@ export default function App() {
     setTodos(s => [...s, {
       id: Date.now(),
       description: value,
+      createdOn: new Date(),
       done: false
     }]);
     description.focus();
@@ -103,14 +123,14 @@ export default function App() {
         {
           todos.map(item => 
             <li key={item.id} style={{
-              textDecoration: item.done ? 'line-through' : 'none',
-              color: item.done ? '#BDC3C7' : 'inherit',
-              userSelect: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              borderTop: '1px solid #BDC3C7',
-              padding: '.5rem 0'
-            }}>
+                textDecoration: item.done ? 'line-through' : 'none',
+                color: item.done ? '#BDC3C7' : 'inherit',
+                userSelect: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                borderTop: '1px solid #BDC3C7',
+                padding: '.5rem 0'
+              }}>
               <input style={{
                 height: '1.25rem',
                 width: '1.25rem',
@@ -118,8 +138,15 @@ export default function App() {
               }}
               type="checkbox" id={'todo' + item.id} checked={item.done} onChange={() => done(item.id)} />
               <label style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexGrow: 1,
                 cursor: 'pointer'
-              }} htmlFor={'todo' + item.id}>{item.description}</label>
+              }} htmlFor={'todo' + item.id}>
+                <span>{item.description}</span>
+                <Ago date={item.createdOn} />
+              </label>
             </li>
           )
         }
