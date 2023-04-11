@@ -30,7 +30,7 @@ export default function App() {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    setTodos(JSON.parse(localStorage.getItem('todos')));
+    setTodos(JSON.parse(localStorage.getItem('todos') || []));
   }, []);
 
   useEffect(() => {
